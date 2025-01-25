@@ -1,5 +1,7 @@
+import logger from "../utils/logger.js";
+
 const errorMiddleware = (err, req, res, next) => {
-  console.log(err);
+  logger.error(`Error: ${err.message}`);
   let metaData;
 
   if (err.isBoom) {
@@ -11,8 +13,7 @@ const errorMiddleware = (err, req, res, next) => {
   res.status(+metaData.status).json({
     error: metaData,
   });
-
-  next(); // Pass control to the next middleware if necessary
+  next();
 };
 
 const handleBoomError = (err) => {
@@ -25,9 +26,8 @@ const handleBoomError = (err) => {
 const handleDefaultError = (err) => {
   return {
     status: +err.status || 500,
-    message: err.message || "error.internal_server",
+    message: err.message || "Internal server error",
   };
 };
 
-// Export the middleware for ES Modules
 export default errorMiddleware;
