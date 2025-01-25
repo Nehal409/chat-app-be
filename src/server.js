@@ -7,6 +7,7 @@ import config from "../config/index.js";
 import { connectDB } from "./database/index.js";
 import errorMiddleware from "./middlewares/error.js";
 import logger from "./utils/logger.js";
+import authRoutes from "./modules/auth/routes/auth.routes.js";
 
 // Initialize Express app
 const app = express();
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
   logger.info("Test route accessed");
   res.status(200).json({ message: "Test route is working!" });
 });
+app.use("/api/v1/auth", authRoutes);
 
 // Error-handling middleware
 app.use(errorMiddleware);
