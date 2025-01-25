@@ -2,9 +2,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const config = {
-  port: process.env.PORT || 5001,
-  environment: process.env.NODE_ENV || "development",
-  logLevel: process.env.LOG_LEVEL || "info",
+  port: Number(process.env.PORT) || 5001,
+  environment: String(process.env.NODE_ENV) || "development",
+  logLevel: String(process.env.LOG_LEVEL),
+  db: {
+    uri: String(process.env.MONGODB_URI),
+  },
 };
 
 export default config;
