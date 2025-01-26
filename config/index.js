@@ -8,6 +8,10 @@ const config = {
   db: {
     uri: String(process.env.MONGODB_URI),
   },
+  jwt: {
+    secret:String(process.env.JWT_SECRET),
+    expiry:String(process.env.JWT_EXPIRES_IN),
+  }
 };
 
 export default config;
