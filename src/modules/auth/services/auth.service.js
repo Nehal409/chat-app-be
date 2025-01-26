@@ -8,8 +8,7 @@ import {
   findUserById,
 } from "../repositories/auth.repository.js";
 
-export const registerUser = async (userData) => {
-  const { fullname, email, password } = userData;
+export const registerUser = async ({ fullname, email, password }) => {
   const existingUser = await findUserByEmail(email);
   if (existingUser) {
     throw badRequest(MESSAGES.AUTH.EMAIL_ALREADY_EXISTS);
