@@ -6,7 +6,7 @@ import swaggerUi from "swagger-ui-express";
 import config from "../config/config.js";
 import swaggerSpec from "../config/swagger.js";
 import { MESSAGES } from "./constants/messages.js";
-import { connectDB } from "./database/index.js";
+import { connectDB } from "../database/index.js";
 import errorMiddleware from "./middlewares/error.js";
 import responseMiddleware from "./middlewares/response.js";
 import authRoutes from "./modules/auth/routes/auth.routes.js";
