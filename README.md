@@ -1,3 +1,3 @@
-# `Real Time Chat - API`
+# `Express JS with MongoDB - Boiler Plate Code`
 
 **Description:**
