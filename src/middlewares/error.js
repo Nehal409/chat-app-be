@@ -1,3 +1,4 @@
+import { MESSAGES } from "../constants/messages.js";
 import logger from "../utils/logger.js";
 
 const errorMiddleware = (err, req, res, next) => {
@@ -26,7 +27,7 @@ const handleBoomError = (err) => {
 const handleDefaultError = (err) => {
   return {
     status: +err.status || 500,
-    message: err.message || "Internal server error",
+    message: err.message || MESSAGES.INTERNAL_SERVER_ERROR,
   };
 };
 

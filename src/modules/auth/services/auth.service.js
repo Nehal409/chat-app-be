@@ -1,5 +1,6 @@
 import { badRequest, notFound, unauthorized } from "@hapi/boom";
 import bcrypt from "bcryptjs";
+import { MESSAGES } from "../../../constants/messages.js";
 import { generateToken } from "../../../utils/jwt.js";
 import {
   createUser,
@@ -11,7 +12,7 @@ export const registerUser = async (userData) => {
   const { fullname, email, password } = userData;
   const existingUser = await findUserByEmail(email);
   if (existingUser) {
-    throw badRequest("This email already exists");
+    throw badRequest(MESSAGES.AUTH.EMAIL_ALREADY_EXISTS);
   }
   const hashedPassword = await bcrypt.hash(password, 10);
   return createUser({ fullname, email, password: hashedPassword });
@@ -20,12 +21,12 @@ export const registerUser = async (userData) => {
 export const loginUser = async ({ email, password }) => {
   const user = await findUserByEmail(email);
   if (!user) {
-    throw unauthorized("Invalid email or password");
+    throw unauthorized(MESSAGES.AUTH.INVALID_CREDENTIALS);
   }
 
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) {
-    throw unauthorized("Invalid email or password");
+    throw unauthorized(MESSAGES.AUTH.INVALID_CREDENTIALS);
   }
 
   const token = generateToken({ id: user.id, email: user.email });
@@ -35,7 +36,7 @@ export const loginUser = async ({ email, password }) => {
 export const getUserProfile = async (userId) => {
   const user = await findUserById(userId);
   if (!user) {
-    throw notFound("User not found");
+    throw notFound(MESSAGES.AUTH.USER_NOT_FOUND);
   }
 
   // Create a copy without the password field

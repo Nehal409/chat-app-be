@@ -1,6 +1,7 @@
 import { unauthorized } from "@hapi/boom";
 import jwt from "jsonwebtoken";
 import config from "../../config/index.js";
+import { MESSAGES } from "../constants/messages.js";
 
 const {
   jwt: { expiry: jwtExpiresIn, secret: jwtSecret },
@@ -14,6 +15,6 @@ export const verifyToken = (token) => {
   try {
     return jwt.verify(token, jwtSecret);
   } catch {
-    throw unauthorized("Invalid or expired token");
+    throw unauthorized(MESSAGES.AUTH.TOKEN_EXPIRED_OR_INVALID);
   }
 };

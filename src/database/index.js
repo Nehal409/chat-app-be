@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import config from "../../config/index.js";
 import logger from "../utils/logger.js";
+import { MESSAGES } from "../constants/messages.js";
 
 const {
   db: { uri: dbUri },
@@ -11,10 +12,10 @@ const connectDB = async () => {
   try {
     const conn = await mongoose.connect(dbUri);
     logger.info(
-      `Connected to the database successfully: ${conn.connection.host}`
+      `${MESSAGES.DATABASE.CONNECTION_SUCCESS}: ${conn.connection.host}`
     );
   } catch (err) {
-    logger.error(`Failed to connect to the database: ${err.message}`);
+    logger.error(`${MESSAGES.DATABASE.CONNECTION_FAILED}: ${err.message}`);
     process.exit(1); // Exit process with failure
   }
 };
