@@ -14,7 +14,13 @@ export const registerUser = async ({ fullname, email, password }) => {
     throw badRequest(MESSAGES.AUTH.EMAIL_ALREADY_EXISTS);
   }
   const hashedPassword = await bcrypt.hash(password, 10);
-  return createUser({ fullname, email, password: hashedPassword });
+  const newUser = await createUser({
+    fullname,
+    email,
+    password: hashedPassword,
+  });
+
+  return generateToken({ id: newUser.id, email });
 };
 
 export const loginUser = async ({ email, password }) => {
@@ -28,8 +34,7 @@ export const loginUser = async ({ email, password }) => {
     throw unauthorized(MESSAGES.AUTH.INVALID_CREDENTIALS);
   }
 
-  const token = generateToken({ id: user.id, email: user.email });
-  return token;
+  return generateToken({ id: user.id, email });
 };
 
 export const getUserProfile = async (userId) => {

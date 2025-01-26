@@ -9,15 +9,14 @@ import { loginSchema, registerSchema } from "../validations/auth.validation.js";
 
 export const register = async (req, res) => {
   const validatedPayload = validate(req.body, registerSchema);
-  const user = await registerUser(validatedPayload);
+  const token = await registerUser(validatedPayload);
   res
     .status(201)
-    .json({ message: MESSAGES.AUTH.REGISTER_SUCCESS, data: { user } });
+    .json({ message: MESSAGES.AUTH.REGISTER_SUCCESS, data: { token } });
 };
 
 export const login = async (req, res) => {
   const validatedPayload = validate(req.body, loginSchema);
-
   const token = await loginUser(validatedPayload);
   res
     .status(200)
