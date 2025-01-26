@@ -1,8 +1,9 @@
-import { unauthorized } from "@hapi/boom";
+import { notFound, unauthorized } from "@hapi/boom";
 import { MESSAGES } from "../constants/messages.js";
+import { findUserById } from "../modules/auth/repositories/auth.repository.js";
 import { verifyToken } from "../utils/jwt.js";
 
-export const authenticate = (req, res, next) => {
+export const authenticate = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -12,7 +13,14 @@ export const authenticate = (req, res, next) => {
   const token = authHeader.split(" ")[1];
   try {
     const decoded = verifyToken(token);
-    req.user = decoded; // Attach user data from the token to the request
+
+    // Check if the user exists in the database
+    const user = await findUserById(decoded.id);
+    if (!user) {
+      throw notFound(MESSAGES.AUTH.USER_NOT_FOUND);
+    }
+
+    req.user = user;
     next();
   } catch (error) {
     next(error);
