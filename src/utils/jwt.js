@@ -1,6 +1,6 @@
 import { unauthorized } from "@hapi/boom";
 import jwt from "jsonwebtoken";
-import config from "../../config/index.js";
+import config from "../../config/config.js";
 import { MESSAGES } from "../constants/messages.js";
 
 const {

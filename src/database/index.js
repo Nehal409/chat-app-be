@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import config from "../../config/index.js";
+import config from "../../config/config.js";
 import logger from "../utils/logger.js";
 import { MESSAGES } from "../constants/messages.js";
 
