@@ -9,6 +9,7 @@ export const MESSAGES = {
     PROFILE_UPDATE_SUCCESS: "User profile updated successfully.",
     TOKEN_EXPIRED_OR_INVALID: "Invalid or expired token.",
     TOKEN_MISSING_OR_INVALID: "Authorization token is missing or invalid.",
+    PROFILE_PIC_REQUIRED: "Profile picture is required.",
   },
   DATABASE: {
     CONNECTION_SUCCESS: "Connected to the database successfully",

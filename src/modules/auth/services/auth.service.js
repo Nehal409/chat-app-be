@@ -45,18 +45,27 @@ export const getUserProfile = async (userId) => {
     throw notFound(MESSAGES.AUTH.USER_NOT_FOUND);
   }
 
-  // Create a copy without the password field
-  const userWithoutPassword = { ...user.toObject() };
-  delete userWithoutPassword.password;
-
-  return userWithoutPassword;
+  return userProfileWithoutPassword(user);
 };
 
 export const updateUserProfile = async (userId, multerObject) => {
+  if (!multerObject) {
+    throw badRequest(MESSAGES.AUTH.PROFILE_PIC_REQUIRED);
+  }
   const uploadedProfilePicture = await cloudinary.uploader.upload(
     multerObject.path
   );
-  return findByUserIdAndUpdate(userId, {
+  const updateUserProfile = await findByUserIdAndUpdate(userId, {
     profilePicture: uploadedProfilePicture.secure_url,
   });
+
+  return userProfileWithoutPassword(updateUserProfile);
+};
+
+const userProfileWithoutPassword = async (userProfile) => {
+  // Create a copy without the password field
+  const userWithoutPassword = { ...userProfile.toObject() };
+  delete userWithoutPassword.password;
+
+  return userWithoutPassword;
 };
