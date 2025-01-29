@@ -1,9 +1,11 @@
 import { badRequest, notFound, unauthorized } from "@hapi/boom";
 import bcrypt from "bcryptjs";
 import { MESSAGES } from "../../../constants/messages.js";
+import cloudinary from "../../../utils/cloudinary.js";
 import { generateToken } from "../../../utils/jwt.js";
 import {
   createUser,
+  findByUserIdAndUpdate,
   findUserByEmail,
   findUserById,
 } from "../repositories/auth.repository.js";
@@ -48,4 +50,13 @@ export const getUserProfile = async (userId) => {
   delete userWithoutPassword.password;
 
   return userWithoutPassword;
+};
+
+export const updateUserProfile = async (userId, multerObject) => {
+  const uploadedProfilePicture = await cloudinary.uploader.upload(
+    multerObject.path
+  );
+  return findByUserIdAndUpdate(userId, {
+    profilePicture: uploadedProfilePicture.secure_url,
+  });
 };

@@ -11,3 +11,7 @@ export const createUser = async (userData) => {
 export const findUserById = async (userId) => {
   return User.findById(userId);
 };
+
+export const findByUserIdAndUpdate = async (userId, payload) => {
+  return User.findByIdAndUpdate(userId, payload, { new: true });
+};

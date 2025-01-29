@@ -4,8 +4,12 @@ import {
   getUserProfile,
   loginUser,
   registerUser,
+  updateUserProfile,
 } from "../services/auth.service.js";
-import { loginSchema, registerSchema } from "../validations/auth.validation.js";
+import {
+  loginSchema,
+  registerSchema,
+} from "../validations/auth.validation.js";
 
 export const register = async (req, res) => {
   const validatedPayload = validate(req.body, registerSchema);
@@ -29,4 +33,13 @@ export const userProfile = async (req, res) => {
   res
     .status(200)
     .json({ message: MESSAGES.AUTH.PROFILE_SUCCESS, data: { user } });
+};
+
+export const updateProfile = async (req, res) => {
+  const { id } = req.user;
+  const user = await updateUserProfile(id, req.file);
+  res.status(200).json({
+    message: MESSAGES.AUTH.PROFILE_UPDATE_SUCCESS,
+    data: { user },
+  });
 };

@@ -9,9 +9,14 @@ const config = {
     uri: String(process.env.MONGODB_URI),
   },
   jwt: {
-    secret:String(process.env.JWT_SECRET),
-    expiry:String(process.env.JWT_EXPIRES_IN),
-  }
+    secret: String(process.env.JWT_SECRET),
+    expiry: String(process.env.JWT_EXPIRES_IN),
+  },
+  cloudinary: {
+    cloudName: String(process.env.CLOUDINARY_CLOUD_NAME),
+    apiSecret: String(process.env.CLOUDINARY_API_SECRET),
+    apiKey: String(process.env.CLOUDINARY_API_KEY),
+  },
 };
 
 export default config;

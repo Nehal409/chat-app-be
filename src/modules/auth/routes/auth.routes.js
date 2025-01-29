@@ -1,9 +1,11 @@
 import { Router } from "express";
 import { authenticate } from "../../../middlewares/auth.js";
+import { multerConfig } from "../../../utils/multer.js";
 import {
-    login,
-    register,
-    userProfile,
+  login,
+  register,
+  updateProfile,
+  userProfile,
 } from "../controllers/auth.controller.js";
 
 const router = Router();
@@ -86,5 +88,12 @@ router.post("/login", login);
  *         description: User not found
  */
 router.get("/profile", authenticate, userProfile);
+
+router.put(
+  "/profile",
+  authenticate,
+  multerConfig().single("profilePicture"),
+  updateProfile
+);
 
 export default router;
