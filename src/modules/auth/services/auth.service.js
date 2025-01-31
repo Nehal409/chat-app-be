@@ -5,6 +5,7 @@ import cloudinary from "../../../utils/cloudinary.js";
 import { generateToken } from "../../../utils/jwt.js";
 import {
   createUser,
+  filteredUsers,
   findByUserIdAndUpdate,
   findUserByEmail,
   findUserById,
@@ -45,27 +46,21 @@ export const getUserProfile = async (userId) => {
     throw notFound(MESSAGES.AUTH.USER_NOT_FOUND);
   }
 
-  return userProfileWithoutPassword(user);
+  return user;
 };
 
-export const updateUserProfile = async (userId, multerObject) => {
-  if (!multerObject) {
-    throw badRequest(MESSAGES.AUTH.PROFILE_PIC_REQUIRED);
-  }
+export const updateUserProfile = async (userId, { profilePicture }) => {
+  console.log(profilePicture);
+
   const uploadedProfilePicture = await cloudinary.uploader.upload(
-    multerObject.path
+    profilePicture
   );
-  const updateUserProfile = await findByUserIdAndUpdate(userId, {
+
+  return findByUserIdAndUpdate(userId, {
     profilePicture: uploadedProfilePicture.secure_url,
   });
-
-  return userProfileWithoutPassword(updateUserProfile);
 };
 
-const userProfileWithoutPassword = async (userProfile) => {
-  // Create a copy without the password field
-  const userWithoutPassword = { ...userProfile.toObject() };
-  delete userWithoutPassword.password;
-
-  return userWithoutPassword;
+export const fetchAllUsers = async (userId) => {
+  return filteredUsers(userId);
 };

@@ -15,13 +15,20 @@ export const registerSchema = Joi.object({
       "string.pattern.base":
         "Password must include at least one uppercase letter, one lowercase letter, one number, and one special character.",
     }),
-  confirmPassword: Joi.string()
-    .valid(Joi.ref("password"))
-    .required()
-    .messages({ "any.only": "Passwords do not match." }),
 });
 
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).required(),
+});
+
+export const updateProfileSchema = Joi.object({
+  profilePicture: Joi.string()
+    .pattern(/^data:image\/(png|jpeg|jpg|gif);base64,([A-Za-z0-9+/=]+)$/)
+    .required()
+    .messages({
+      "string.empty": "Profile picture is required.",
+      "string.pattern.base":
+        "Invalid profile picture format. Must be a Base64-encoded image.",
+    }),
 });

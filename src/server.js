@@ -5,11 +5,12 @@ import helmet from "helmet";
 import swaggerUi from "swagger-ui-express";
 import config from "../config/config.js";
 import swaggerSpec from "../config/swagger.js";
-import { MESSAGES } from "./constants/messages.js";
 import { connectDB } from "../database/index.js";
+import { MESSAGES } from "./constants/messages.js";
 import errorMiddleware from "./middlewares/error.js";
 import responseMiddleware from "./middlewares/response.js";
 import authRoutes from "./modules/auth/routes/auth.routes.js";
+import messageRoutes from "./modules/chat/routes/chat.routes.js";
 import logger from "./utils/logger.js";
 
 const { port, environment } = config;
@@ -18,10 +19,15 @@ const app = express();
 
 // Parse URL-encoded and JSON bodies
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 
 // Middleware setup
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(helmet());
 
 // Global response middleware
@@ -32,6 +38,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Modular routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/messages", messageRoutes);
 
 // Global Error-handling middleware
 app.use(errorMiddleware);

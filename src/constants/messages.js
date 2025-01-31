@@ -6,6 +6,7 @@ export const MESSAGES = {
     REGISTER_SUCCESS: "User registered successfully.",
     LOGIN_SUCCESS: "Login successful.",
     PROFILE_SUCCESS: "User profile retrieved successfully.",
+    USER_FETCHED_SUCCESS: "User fetched successfully.",
     PROFILE_UPDATE_SUCCESS: "User profile updated successfully.",
     TOKEN_EXPIRED_OR_INVALID: "Invalid or expired token.",
     TOKEN_MISSING_OR_INVALID: "Authorization token is missing or invalid.",
@@ -19,5 +20,9 @@ export const MESSAGES = {
   MULTER: {
     INVALID_FILE_TYPE:
       "Invalid file type. Only JPEG, PNG, and JPG are allowed.",
+  },
+  MESSAGE: {
+    FETCH_SUCCESS: "User messages fetched successfully.",
+    SENT_SUCCESS: "Message sent successfully.",
   },
 };

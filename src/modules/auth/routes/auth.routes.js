@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authenticate } from "../../../middlewares/auth.js";
 import { multerConfig } from "../../../utils/multer.js";
 import {
+  getAllUsers,
   login,
   register,
   updateProfile,
@@ -30,13 +31,10 @@ const router = Router();
  *                 type: string
  *               password:
  *                 type: string
- *               confirmPassword:
- *                 type: string
  *             required:
  *               - fullname
  *               - email
  *               - password
- *               - confirmPassword
  *     responses:
  *       201:
  *         description: User registered successfully
@@ -81,6 +79,8 @@ router.post("/login", login);
  *     summary: Get user profile
  *     tags:
  *       - Users
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: User profile retrieved successfully
@@ -89,6 +89,50 @@ router.post("/login", login);
  */
 router.get("/profile", authenticate, userProfile);
 
+/**
+ * @swagger
+ * /auth/users:
+ *   get:
+ *     summary: Get all users except the logged-in user
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Users fetched successfully
+ *       401:
+ *         description: Unauthorized - Missing or invalid token
+ */
+router.get("/users", authenticate, getAllUsers);
+
+/**
+ * @swagger
+ * /auth/profile:
+ *   put:
+ *     summary: Update user profile picture
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               profilePicture:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       400:
+ *         description: Profile picture is required
+ *       401:
+ *         description: Unauthorized - Missing or invalid token
+ */
 router.put(
   "/profile",
   authenticate,
