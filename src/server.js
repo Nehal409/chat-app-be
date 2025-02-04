@@ -15,7 +15,7 @@ import messageRoutes from "./modules/chat/routes/chat.routes.js";
 import logger from "./utils/logger.js";
 import { initializeSocket } from "./utils/socket.js";
 
-const { port, environment, frontendUrl } = config;
+const { port, environment } = config;
 
 // Initialize Express app and HTTP server
 const app = express();
@@ -26,7 +26,7 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: frontendUrl,
+    origin: "*",
     credentials: true,
   })
 );

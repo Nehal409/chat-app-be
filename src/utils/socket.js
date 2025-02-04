@@ -1,5 +1,4 @@
 import { Server } from "socket.io";
-import config from "../../config/config.js";
 import logger from "../utils/logger.js";
 
 export const users = new Map(); // Store connected users
@@ -8,7 +7,7 @@ let io;
 export const initializeSocket = (server) => {
   io = new Server(server, {
     cors: {
-      origin: config.frontendUrl,
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
     },
