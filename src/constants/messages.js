@@ -17,10 +17,6 @@ export const MESSAGES = {
     CONNECTION_FAILED: "Failed to connect to the database",
   },
   INTERNAL_SERVER_ERROR: "Internal server error.",
-  MULTER: {
-    INVALID_FILE_TYPE:
-      "Invalid file type. Only JPEG, PNG, and JPG are allowed.",
-  },
   MESSAGE: {
     FETCH_SUCCESS: "User messages fetched successfully.",
     SENT_SUCCESS: "Message sent successfully.",

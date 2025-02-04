@@ -1,6 +1,5 @@
 import { Router } from "express";
 import { authenticate } from "../../../middlewares/auth.js";
-import { multerConfig } from "../../../utils/multer.js";
 import {
   getAllUsers,
   login,
@@ -136,7 +135,6 @@ router.get("/users", authenticate, getAllUsers);
 router.put(
   "/profile",
   authenticate,
-  multerConfig().single("profilePicture"),
   updateProfile
 );
 
