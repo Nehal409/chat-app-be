@@ -50,8 +50,6 @@ export const getUserProfile = async (userId) => {
 };
 
 export const updateUserProfile = async (userId, { profilePicture }) => {
-  console.log(profilePicture);
-
   const uploadedProfilePicture = await cloudinary.uploader.upload(
     profilePicture
   );
