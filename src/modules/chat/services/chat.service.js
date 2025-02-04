@@ -1,19 +1,18 @@
 import { notFound } from "@hapi/boom";
 import { MESSAGES } from "../../../constants/messages.js";
+import cloudinary from "../../../utils/cloudinary.js";
+import { getSocketInstance, users } from "../../../utils/socket.js";
 import { findUserById } from "../../auth/repositories/auth.repository.js";
 import {
   fetchUserMessages,
   saveMessage,
 } from "../repositories/chat.repository.js";
-import cloudinary from "../../../utils/cloudinary.js";
 
 export const getMyMessages = async (currentUserId, userToChatId) => {
   const validateUserToChatUser = await findUserById(userToChatId);
-  // Validate if the user to chat exists. Current user is already validated through the middleware
   if (!validateUserToChatUser) {
     throw notFound(MESSAGES.AUTH.USER_NOT_FOUND);
   }
-
   return fetchUserMessages(currentUserId, userToChatId);
 };
 
@@ -23,7 +22,6 @@ export const sendNewMessages = async (
   { text, image }
 ) => {
   const validateReceiver = await findUserById(receiverId);
-  // Validate if the receiver exists.
   if (!validateReceiver) {
     throw notFound(MESSAGES.AUTH.USER_NOT_FOUND);
   }
@@ -34,5 +32,20 @@ export const sendNewMessages = async (
     imageUrl = uploadedImage.secure_url;
   }
 
-  return saveMessage({ senderId, receiverId, text, image: imageUrl });
+  const message = await saveMessage({
+    senderId,
+    receiverId,
+    text,
+    image: imageUrl,
+  });
+
+  // Emit message event through socket
+  const io = getSocketInstance();
+  const recipientSocketId = users.get(receiverId); // Get recipient's socket ID
+
+  if (recipientSocketId) {
+    io.to(recipientSocketId).emit("receiveMessage", message);
+  }
+
+  return message;
 };

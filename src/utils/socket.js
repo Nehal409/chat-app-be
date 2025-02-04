@@ -2,10 +2,11 @@ import { Server } from "socket.io";
 import config from "../../config/config.js";
 import logger from "../utils/logger.js";
 
-const users = new Map(); // Store connected users
+export const users = new Map(); // Store connected users
+let io;
 
 export const initializeSocket = (server) => {
-  const io = new Server(server, {
+  io = new Server(server, {
     cors: {
       origin: config.frontendUrl,
       methods: ["GET", "POST"],
@@ -16,35 +17,48 @@ export const initializeSocket = (server) => {
   io.on("connection", (socket) => {
     logger.info(`🔌 New connection: ${socket.id}`);
 
-    socket.on("join", (userId) => handleUserJoin(socket, userId));
-    socket.on("sendMessage", (message) => handleSendMessage(io, message));
+    const userId = socket.handshake.query.userId;
+    if (userId) {
+      handleUserJoin(socket, userId);
+    }
+
+    socket.on("sendMessage", (message) => handleSendMessage(message));
     socket.on("disconnect", () => handleUserDisconnect(socket));
   });
 
   return io;
 };
 
-// Handle user joining
+// Function to get socket instance globally
+export const getSocketInstance = () => io;
+
 const handleUserJoin = (socket, userId) => {
   users.set(userId, socket.id);
   logger.info(`👤 User ${userId} connected with socket ID ${socket.id}`);
+
+  io.emit("getOnlineUsers", Array.from(users.keys()));
 };
 
-// Handle message sending
-const handleSendMessage = (io, message) => {
+const handleSendMessage = (message) => {
   const recipientSocketId = users.get(message.receiverId);
   if (recipientSocketId) {
     io.to(recipientSocketId).emit("receiveMessage", message);
   }
 };
 
-// Handle user disconnect
 const handleUserDisconnect = (socket) => {
+  let disconnectedUserId = null;
+
   for (const [userId, socketId] of users.entries()) {
     if (socketId === socket.id) {
+      disconnectedUserId = userId;
       users.delete(userId);
-      logger.info(`❌ User ${userId} disconnected`);
       break;
     }
+  }
+
+  if (disconnectedUserId) {
+    logger.info(`❌ User ${disconnectedUserId} disconnected`);
+    io.emit("getOnlineUsers", Array.from(users.keys()));
   }
 };
